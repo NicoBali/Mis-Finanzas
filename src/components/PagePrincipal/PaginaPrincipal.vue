@@ -21,7 +21,13 @@
               <router-link class="nav-link" to="/objetivos">Objetivos</router-link>
             </li>
             <li class="nav-item">
-              <a class="btn ms-3" style="background-color: white; color: #003366;" href="#registro">Iniciar Sesión</a>
+            <router-link 
+              to="/login" 
+              class="btn ms-3" 
+              style="background-color: white; color: #003366;"
+            >
+              Iniciar Sesión
+            </router-link>
             </li>
           </ul>
         </div>

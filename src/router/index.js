@@ -1,8 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-<<<<<<< HEAD
 import HomeView from '../views/HomeView.vue'
 import Funciones from '../components/PagePrincipal/Funciones.vue'
 import Objetivos from '../components/PagePrincipal/Objetivos.vue'
+import RegistroView from '@/views/RegistroView.vue'
+import InicioSesionView from '@/views/InicioSesionView.vue'
+import DashboardView from '@/views/DashboardView.vue'
+
 
 const routes = [
   {
@@ -20,12 +23,6 @@ const routes = [
     name: 'objetivos',
     component: Objetivos
   },
-=======
-import RegistroView from '@/views/RegistroView.vue'
-import InicioSesionView from '@/views/InicioSesionView.vue'
-import DashboardView from '@/views/DashboardView.vue'
-
-const routes = [
   {
     path: '/',
     name: 'DashboardView',
@@ -35,13 +32,12 @@ const routes = [
     path: '/registro',
     name: 'RegistroView',
     component: RegistroView
-  }, {
+  },
+  {
     path: '/login',
     name: 'InicioSesionView',
     component: InicioSesionView
   }
->>>>>>> 15ed596 (Registro, login, barra lateral - Nicolas)
-
 ]
 
 const router = createRouter({

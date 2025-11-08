@@ -12,10 +12,7 @@
     "@primevue/themes": "^4.4.1",
     "axios": "^1.13.1",
     "bootstrap": "^5.3.8",
-<<<<<<< HEAD
-=======
     "bootstrap-icons": "^1.13.1",
->>>>>>> 15ed596 (Registro, login, barra lateral - Nicolas)
     "core-js": "^3.8.3",
     "primeicons": "^7.0.0",
     "primevue": "^4.4.1",
