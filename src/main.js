@@ -42,5 +42,3 @@ app.component('CardVue', Card)
 
 // Montar la app
 app.mount('#app')
-
-

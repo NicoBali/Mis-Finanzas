@@ -1,32 +1,7 @@
 <template>
   <div id="objetivos">
     <!-- Barra de navegación -->
-    <nav class="navbar navbar-expand-lg navbar-dark shadow-sm" style="background-color: #003366;">
-      <div class="container">
-        <router-link class="navbar-brand fw-bold text-white" to="/home">
-          <i class="fas fa-wallet me-2"></i>Mis Finanzas
-        </router-link>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <router-link class="nav-link" to="/home">Inicio</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/funciones">Funciones</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link active" to="/objetivos">Objetivos</router-link>
-            </li>
-            <li class="nav-item">
-              <a class="btn ms-3" style="background-color: white; color: #003366;" href="#registro">Iniciar Sesión</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <HeaderMain/>
 
    
 
@@ -121,24 +96,20 @@
     </section>
 
     <!-- Pie de página -->
-    <footer class="footer py-4" style="background-color: #f0f0f0; color: #333333;">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6">
-            <p class="mb-0">&copy; 2025 Mis Finanzas. Todos los derechos reservados.</p>
-          </div>
-          <div class="col-md-6 text-md-end">
-            <p class="mb-0">Contacto: info@misfinanzas.com | Tel: +57 3003012945</p>
-          </div>
-        </div>
-      </div>
-    </footer>
+    <FooterMain/>
   </div>
 </template>
 
 <script>
+import FooterMain from './FooterMain.vue';
+import HeaderMain from './HeaderMain.vue';
+
 export default {
-  name: 'PageObjetivos'
+  name: 'PageObjetivos',
+  components: {
+    HeaderMain,
+    FooterMain
+  }
 }
 </script>
 

@@ -1,28 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import Funciones from '../components/PagePrincipal/Funciones.vue'
-import Objetivos from '../components/PagePrincipal/Objetivos.vue'
+
+// Vistas
+import DashboardView from '@/views/DashboardView.vue'
 import RegistroView from '@/views/RegistroView.vue'
 import InicioSesionView from '@/views/InicioSesionView.vue'
-import DashboardView from '@/views/DashboardView.vue'
+import HomeView from '@/views/HomeView.vue'
 
+// Componentes
+import Funciones from '@/components/PagePrincipal/Funciones.vue'
+import Objetivos from '@/components/PagePrincipal/Objetivos.vue'
+import RegistrarIngreso from '@/components/RegistrarIngreso.vue'
+import RegistrarGasto from '@/components/RegistrarGasto.vue'
 
 const routes = [
-  {
-    path: '/home',
-    name: 'home',
-    component: HomeView
-  },
-  {
-    path: '/funciones',
-    name: 'funciones',
-    component: Funciones
-  },
-  {
-    path: '/objetivos',
-    name: 'objetivos',
-    component: Objetivos
-  },
   {
     path: '/',
     name: 'DashboardView',
@@ -37,6 +27,31 @@ const routes = [
     path: '/login',
     name: 'InicioSesionView',
     component: InicioSesionView
+  },
+  {
+    path: '/principal',
+    name: 'HomeView',
+    component: HomeView
+  },
+  {
+    path: '/funciones',
+    name: 'PageFunciones',
+    component: Funciones
+  },
+  {
+    path: '/objetivos',
+    name: 'PageObjetivos',
+    component: Objetivos
+  },
+  {
+    path: '/ingreso',
+    name: 'RegistrarIngreso',
+    component: RegistrarIngreso
+  },
+  {
+    path: '/gasto',
+    name: 'RegistrarGasto',
+    component: RegistrarGasto
   }
 ]
 
