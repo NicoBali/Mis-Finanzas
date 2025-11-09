@@ -67,7 +67,7 @@
 
 
     <!-- Sección de Beneficios Adicionales -->
-    <section class="beneficios-adicionales py-5">
+    <section class="beneficios-adicionales py-5" style="background-color: #fff; color: #003366;">
       <div class="container">
         <h2 class="text-center fw-bold mb-5">Beneficios Adicionales</h2>
         <div class="row g-4">

@@ -1,5 +1,5 @@
 <template>
-  <aside class="sidebar">
+  <aside class="sidebar" :class="{ open: sidebarOpen }">
     <h3 class="logo">Mis Finanzas</h3>
 
     <ul class="menu">
@@ -17,8 +17,17 @@
 </template>
 
 <script setup>
-/* const emit = defineEmits(["change-section"])
-const cambiar = (seccion) => emit("change-section", seccion) */
+import { defineProps, defineEmits } from 'vue'
+
+defineProps({
+  sidebarOpen: {
+    type: Boolean,
+    default: false
+  }
+})
+
+const emit = defineEmits(["change-section"])
+const cambiar = (seccion) => emit("change-section", seccion)
 </script>
 
 <style scoped>

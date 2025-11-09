@@ -11,6 +11,9 @@ import Funciones from '@/components/PagePrincipal/Funciones.vue'
 import Objetivos from '@/components/PagePrincipal/Objetivos.vue'
 import RegistrarIngreso from '@/components/RegistrarIngreso.vue'
 import RegistrarGasto from '@/components/RegistrarGasto.vue'
+import MetasAhorro from '@/components/MetaAhorro/MetaAhorro.vue'
+import HistorialFinanciero from '@/components/Historial/HistorialFinanciero.vue'
+
 
 const routes = [
   {
@@ -52,6 +55,18 @@ const routes = [
     path: '/gasto',
     name: 'RegistrarGasto',
     component: RegistrarGasto
+  },
+
+   {
+    path: '/metas',
+    name: 'MetasAhorro',
+    component: MetasAhorro
+  },
+
+  {
+    path: '/historial',
+    name: 'HistorialFinanciero',
+    component: HistorialFinanciero
   }
 ]
 

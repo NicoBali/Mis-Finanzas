@@ -2,7 +2,7 @@
    <!-- Barra de navegación -->
   <nav class="navbar navbar-expand-lg navbar-dark shadow-sm" style="background-color: #003366;">
     <div class="container">
-      <router-link class="navbar-brand fw-bold text-white" to="/home">
+      <router-link class="navbar-brand fw-bold text-white" to="/principal">
         <i class="fas fa-wallet me-2"></i>Mis Finanzas
       </router-link>
 

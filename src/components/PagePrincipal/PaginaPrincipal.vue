@@ -32,7 +32,7 @@
     </section>
 
     <!-- Sección de funcionalidades -->
-    <section id="funcionalidades" class="funcionalidades py-5">
+    <section id="funcionalidades" class="funcionalidades py-5"  style="background-color: #fff; color: #003366;">
       <div class="container">
         <h2 class="text-center fw-bold mb-5">Funcionalidades Principales</h2>
         <div class="row g-4">
@@ -125,7 +125,7 @@
     </section>
 
     <!-- Sección de Principales Problemas para Ahorrar -->
-    <section class="problema py-5">
+    <section class="problema py-5"  style="background-color: #fff; color: #003366;">
       <div class="container">
         <h2 class="text-center fw-bold mb-5">Principales Problemas para Ahorrar</h2>
         <div class="row g-4">
