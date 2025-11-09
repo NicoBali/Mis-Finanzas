@@ -1,6 +1,6 @@
 <template>
   <div class="split-container">
-    <!-- Panel visual (SIN CAMBIOS) -->
+    <!-- Panel visual -->
     <div class="visual-panel d-flex flex-column justify-content-center align-items-center text-white">
       <h1 class="fw-bold mb-3">💹 Finanzas claras</h1>
       <p class="text-light mb-5 fs-5">Registra tus ingresos y mantén el control de tu futuro financiero.</p>
@@ -23,7 +23,7 @@
       </div>
     </div>
 
-    <!-- Panel formulario (NUEVO DISEÑO) -->
+    <!-- Panel formulario -->
     <div class="form-panel d-flex justify-content-center align-items-center">
       <div class="form-card border-0 shadow-lg bg-white rounded-5 animate-card p-5">
         <div class="text-center mb-4">
@@ -35,7 +35,6 @@
         </div>
 
         <form @submit.prevent="handleSubmit">
-          <!-- Descripción -->
           <div class="form-floating mb-4">
             <input
               type="text"
@@ -48,7 +47,6 @@
             <label for="descripcion"><i class="bi bi-text-paragraph me-2"></i> Descripción</label>
           </div>
 
-          <!-- Monto -->
           <div class="form-floating mb-4">
             <input
               type="number"
@@ -63,13 +61,11 @@
             <label for="monto"><i class="bi bi-currency-dollar me-2"></i> Monto</label>
           </div>
 
-          <!-- Fecha -->
           <div class="form-floating mb-5">
             <input type="date" v-model="fecha" class="form-control" id="fecha" required />
             <label for="fecha"><i class="bi bi-calendar-date me-2"></i> Fecha</label>
           </div>
 
-          <!-- Botón -->
           <button type="submit" class="btn btn-primary w-100 fw-bold py-3">
             <i class="bi bi-check-circle me-2"></i> Guardar ingreso
           </button>
@@ -107,7 +103,7 @@ const handleSubmit = () => {
   font-family: "Poppins", sans-serif;
 }
 
-/* === Panel izquierdo (SIN CAMBIOS) === */
+/* === Panel izquierdo === */
 .visual-panel {
   flex: 1;
   background: linear-gradient(135deg, #002b5b, #1a1a1a);
@@ -144,7 +140,7 @@ const handleSubmit = () => {
   transform: scaleY(1.1);
 }
 
-/* === Panel derecho (NUEVO DISEÑO) === */
+/* === Panel derecho === */
 .form-panel {
   flex: 1;
   background-color: #f2f4f7;
@@ -214,6 +210,28 @@ const handleSubmit = () => {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* === RESPONSIVE: uno encima del otro === */
+@media (max-width: 992px) {
+  .split-container {
+    flex-direction: column;
+  }
+
+  .visual-panel,
+  .form-panel {
+    width: 100%;
+    min-height: auto;
+    padding: 2rem;
+  }
+
+  .stats-card {
+    width: 100% !important;
+  }
+
+  .form-card {
+    padding: 2rem;
   }
 }
 </style>

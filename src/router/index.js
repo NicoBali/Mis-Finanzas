@@ -13,12 +13,13 @@ import RegistrarIngreso from '@/components/RegistrarIngreso.vue'
 import RegistrarGasto from '@/components/RegistrarGasto.vue'
 import MetasAhorro from '@/components/MetaAhorro/MetaAhorro.vue'
 import HistorialFinanciero from '@/components/Historial/HistorialFinanciero.vue'
+import ConfiguracionMenu from '@/components/ConfiguracionMenu.vue'
 import SolicitarEstablecer from '@/components/CambioClave/SolicitarEstablecer.vue'
 import RestablecerClave from '@/components/CambioClave/RestablecerClave.vue'
 import PageDashboard from '@/components/PagePrincipalDashboard/PageDashboard.vue'
 
-
 const routes = [
+  // Rutas principales / vistas
   {
     path: '/',
     name: 'DashboardView',
@@ -39,6 +40,8 @@ const routes = [
     name: 'HomeView',
     component: HomeView
   },
+
+  // Subpáginas / componentes del sitio principal
   {
     path: '/funciones',
     name: 'PageFunciones',
@@ -59,32 +62,34 @@ const routes = [
     name: 'RegistrarGasto',
     component: RegistrarGasto
   },
-
-   {
+  {
     path: '/metas',
     name: 'MetasAhorro',
     component: MetasAhorro
   },
-
   {
     path: '/historial',
     name: 'HistorialFinanciero',
     component: HistorialFinanciero
   },
-
+  {
+    path: '/configuracion',
+    name: 'ConfiguracionMenu',
+    component: ConfiguracionMenu
+  },
   {
     path: '/solicitud',
     name: 'Solicitud',
     component: SolicitarEstablecer
   },
-
   {
     path: '/restablecer',
     name: 'Restablecer',
     component: RestablecerClave
   },
 
-   {
+  // Ruta del dashboard interno
+  {
     path: '/dashboard',
     name: 'Dashboard',
     component: PageDashboard

@@ -42,20 +42,11 @@
         </div>
 
         <form @submit.prevent="handleSubmit">
-          <!-- Categoría -->
           <div class="form-floating mb-4">
-            <input
-              type="text"
-              v-model="categoria"
-              class="form-control"
-              id="categoria"
-              placeholder="Categoría del gasto"
-              required
-            />
+            <input type="text" v-model="categoria" class="form-control" id="categoria" placeholder="Categoría del gasto" required />
             <label for="categoria"><i class="bi bi-folder2-open me-2"></i> Categoría</label>
           </div>
 
-          <!-- Tipo -->
           <div class="form-floating mb-4">
             <select v-model="tipo" class="form-select" id="tipo" required>
               <option value="fijo">Fijo</option>
@@ -65,40 +56,21 @@
             <label for="tipo"><i class="bi bi-tags me-2"></i> Tipo de gasto</label>
           </div>
 
-          <!-- Monto -->
           <div class="form-floating mb-4">
-            <input
-              type="number"
-              v-model="monto"
-              class="form-control"
-              id="monto"
-              placeholder="Monto"
-              step="0.01"
-              min="0"
-              required
-            />
+            <input type="number" v-model="monto" class="form-control" id="monto" placeholder="Monto" step="0.01" min="0" required />
             <label for="monto"><i class="bi bi-currency-dollar me-2"></i> Monto</label>
           </div>
 
-          <!-- Descripción -->
           <div class="form-floating mb-4">
-            <textarea
-              v-model="descripcion"
-              class="form-control"
-              id="descripcion"
-              placeholder="Descripción del gasto"
-              style="height: 90px"
-            ></textarea>
+            <textarea v-model="descripcion" class="form-control" id="descripcion" placeholder="Descripción del gasto" style="height: 90px"></textarea>
             <label for="descripcion"><i class="bi bi-text-paragraph me-2"></i> Descripción</label>
           </div>
 
-          <!-- Fecha -->
           <div class="form-floating mb-5">
             <input type="date" v-model="fecha" class="form-control" id="fecha" required />
             <label for="fecha"><i class="bi bi-calendar-date me-2"></i> Fecha</label>
           </div>
 
-          <!-- Botón -->
           <button type="submit" class="btn btn-primary w-100 fw-bold py-3">
             <i class="bi bi-check-circle me-2"></i> Guardar gasto
           </button>
@@ -248,6 +220,29 @@ const handleSubmit = () => {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* === 📱 VISTA MÓVIL (paneles apilados uno encima del otro) === */
+@media (max-width: 768px) {
+  .split-container {
+    flex-direction: column; /* Apila los paneles */
+  }
+
+  .visual-panel,
+  .form-panel {
+    flex: none;
+    width: 100%;
+    padding: 2rem 1.5rem;
+    min-height: auto;
+  }
+
+  .form-card {
+    padding: 2rem;
+  }
+
+  .stats-card {
+    width: 100%;
   }
 }
 </style>

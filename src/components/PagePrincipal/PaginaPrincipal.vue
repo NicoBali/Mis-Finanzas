@@ -13,7 +13,7 @@
             <a href="#registro" class="btn btn-light btn-lg fw-bold px-4 py-3">Comienza ahora</a>
           </div>
           <div class="col-lg-6 text-center">
-            <img src="https://via.placeholder.com/500x400/ffffff/003366?text=Finanzas+Personales" alt="Foto finanzas" class="img-fluid rounded shadow">
+            <img src="@/assets/laptopConDashboard.avif" alt="Foto finanzas" class="img-fluid rounded shadow">
           </div>
         </div>
       </div>
@@ -79,15 +79,16 @@
     <!-- Sección de objetivos -->
     <section id="objetivos" class="services py-5">
       <div class="container">
-        <h2 class="text-center fw-bold mb-5">Objetivos</h2>
+        <h2 class="text-center fw-bold mb-5">🎯 Objetivos</h2>
         <div class="services-container">
+
           <div class="service-item">
             <div class="service-icon">
               <i class="fas fa-graduation-cap"></i>
             </div>
             <div class="service-description">
-              <h3>Promover la educación financiera</h3>
-              <p>Ayudar a los usuarios a entender mejor sus finanzas personales.</p>
+              <h3>🎓 Promover la educación financiera</h3>
+              <p>Ayudar a los usuarios a entender mejor sus finanzas personales y tomar decisiones más inteligentes 💡.</p>
             </div>
           </div>
 
@@ -96,8 +97,8 @@
               <i class="fas fa-piggy-bank"></i>
             </div>
             <div class="service-description">
-              <h3>Fomentar el ahorro responsable</h3>
-              <p>Crear herramientas que motiven a ahorrar de manera consistente.</p>
+              <h3>🐖 Fomentar el ahorro responsable</h3>
+              <p>Crear herramientas que motiven a ahorrar de manera constante y sostenible 📈.</p>
             </div>
           </div>
 
@@ -106,8 +107,8 @@
               <i class="fas fa-chart-bar"></i>
             </div>
             <div class="service-description">
-              <h3>Proporcionar análisis detallados</h3>
-              <p>Ofrecer insights sobre patrones de gasto y oportunidades de mejora.</p>
+              <h3>📊 Proporcionar análisis detallados</h3>
+              <p>Ofrecer insights claros sobre patrones de gasto y oportunidades de mejora 💬.</p>
             </div>
           </div>
 
@@ -116,13 +117,15 @@
               <i class="fas fa-calendar-alt"></i>
             </div>
             <div class="service-description">
-              <h3>Facilitar la planificación financiera</h3>
-              <p>Ayudar a crear planes de ahorro viables a largo plazo.</p>
+              <h3>📅 Facilitar la planificación financiera</h3>
+              <p>Ayudar a crear planes de ahorro viables a largo plazo y mantenerlos al día 🕒.</p>
             </div>
           </div>
+
         </div>
       </div>
-    </section>
+  </section>
+
 
     <!-- Sección de Principales Problemas para Ahorrar -->
     <section class="problema py-5"  style="background-color: #fff; color: #003366;">
@@ -186,24 +189,51 @@
     </section>
 
     <!-- Testimonio y llamada a la acción -->
-    <section class="testimonio py-5" style="background-color: #003366; color: white;">
-      <div class="container text-center">
-        <div class="testimonial-slider">
-          <div class="testimonial-item" v-for="(testimonial, index) in testimonials" :key="index" :class="{ active: index === currentTestimonial }">
-            <blockquote class="blockquote mb-4">
-              <p class="mb-0">"{{ testimonial.text }}"</p>
-            </blockquote>
-            <footer class="blockquote-footer" style="color: white;">{{ testimonial.author }}, {{ testimonial.role }}</footer>
-          </div>
-        </div>
-        <div class="testimonial-indicators mt-3">
-          <span v-for="(testimonial, index) in testimonials" :key="index" class="indicator" :class="{ active: index === currentTestimonial }" @click="setTestimonial(index)"></span>
-        </div>
-        <div class="mt-4">
-          <a href="#registro" class="btn btn-light btn-lg fw-bold px-4 py-3">Únete a miles de personas que ya están ahorrando</a>
-        </div>
+    <!-- Testimonio y llamada a la acción -->
+<section class="testimonio py-5" style="background-color: #003366; color: white;">
+  <div class="container text-center">
+    <div class="testimonial-slider">
+      <div
+        class="testimonial-item"
+        v-for="(testimonial, index) in testimonials"
+        :key="index"
+        :class="{ active: index === currentTestimonial }"
+      >
+        <!-- Imagen del usuario -->
+        <img
+          v-if="testimonial.photo"
+          :src="testimonial.photo"
+          alt="Foto del usuario"
+          class="testimonial-photo mb-3"
+        />
+
+        <blockquote class="blockquote mb-4">
+          <p class="mb-0">"{{ testimonial.text }}"</p>
+        </blockquote>
+        <footer class="blockquote-footer" style="color: white;">
+          {{ testimonial.author }}, {{ testimonial.role }}
+        </footer>
       </div>
-    </section>
+    </div>
+
+    <div class="testimonial-indicators mt-3">
+      <span
+        v-for="(testimonial, index) in testimonials"
+        :key="index"
+        class="indicator"
+        :class="{ active: index === currentTestimonial }"
+        @click="setTestimonial(index)"
+      ></span>
+    </div>
+
+    <div class="mt-4">
+      <a href="#registro" class="btn btn-light btn-lg fw-bold px-4 py-3">
+        Únete a miles de personas que ya están ahorrando
+      </a>
+    </div>
+  </div>
+</section>
+
 
     <!-- Pie de página -->
     <FooterMain/>
@@ -223,22 +253,26 @@ export default {
   data() {
     return {
       testimonials: [
-        {
-          text: "Mis Finanzas me ha ayudado a ahorrar más de $500 en los últimos 3 meses. ¡Es increíble cómo una buena planificación puede cambiar tu vida financiera!",
-          author: "María González",
-          role: "Usuaria Activa"
-        },
-        {
-          text: "Gracias a Mis Finanzas, ahora tengo metas claras de ahorro y puedo ver mi progreso en tiempo real. ¡Altamente recomendado!",
-          author: "Carlos Rodríguez",
-          role: "Usuario Activo"
-        },
-        {
-          text: "La aplicación me ha enseñado a gestionar mejor mis gastos. He logrado crear un fondo de emergencias y estoy más tranquilo financieramente.",
-          author: "Ana López",
-          role: "Usuaria Activa"
-        }
-      ],
+  {
+    text: "Mis Finanzas me ha ayudado a ahorrar más de $500 en los últimos 3 meses. ¡Es increíble cómo una buena planificación puede cambiar tu vida financiera!",
+    author: "María González",
+    role: "Usuaria Activa",
+    photo: "https://randomuser.me/api/portraits/women/45.jpg"
+  },
+  {
+    text: "Gracias a Mis Finanzas, ahora tengo metas claras de ahorro y puedo ver mi progreso en tiempo real. ¡Altamente recomendado!",
+    author: "Carlos Rodríguez",
+    role: "Usuario Activo",
+    photo: "https://randomuser.me/api/portraits/men/46.jpg"
+  },
+  {
+    text: "La aplicación me ha enseñado a gestionar mejor mis gastos. He logrado crear un fondo de emergencias y estoy más tranquilo financieramente.",
+    author: "Ana López",
+    role: "Usuaria Activa",
+    photo: "https://randomuser.me/api/portraits/women/47.jpg"
+  }
+],
+
       currentTestimonial: 0
     }
   },
@@ -275,6 +309,7 @@ export default {
 }
 
 /* Estilos para la sección de servicios */
+/* Sección de servicios (Objetivos) */
 .services {
   background-color: #f8f9fa;
 }
@@ -287,35 +322,33 @@ export default {
   margin: 0 auto;
 }
 
+/* Tarjetas de objetivos */
 .service-item {
   display: flex;
-  align-items: center;
+  flex-direction: column; /* Centra verticalmente el contenido */
+  justify-content: center;
+  align-items: center; /* Centra horizontalmente */
+  text-align: center;
   background: white;
   padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .service-item:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
 }
 
-.service-icon {
-  flex-shrink: 0;
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(135deg, #003366, #0056b3);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 2rem;
-  color: white;
-  font-size: 2rem;
+/* Íconos */
+.service-icon i {
+  font-size: 2.5rem;
+  color: #003366;
+  margin-bottom: 1rem;
 }
 
+/* Títulos y texto */
 .service-description h3 {
   margin-bottom: 0.5rem;
   color: #003366;
@@ -324,21 +357,20 @@ export default {
 
 .service-description p {
   margin: 0;
-  color: #666;
+  color: #555;
   line-height: 1.6;
 }
 
+/* Responsive */
 @media (max-width: 768px) {
-  .service-item {
-    flex-direction: column;
-    text-align: center;
+  .services-container {
+    gap: 1.5rem;
   }
-
-  .service-icon {
-    margin-right: 0;
-    margin-bottom: 1rem;
+  .service-item {
+    padding: 1.5rem;
   }
 }
+
 
 /* Estilos para las tarjetas de funcionalidades */
 .funcionalidades .card {
@@ -458,6 +490,17 @@ input[type="checkbox"]:checked + .faq-question + .faq-answer {
 .indicator.active {
   background-color: white;
 }
+
+.testimonial-photo {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid white;
+  margin: 0 auto;
+  display: block;
+}
+
 
 /* Estilos para el footer */
 .footer {
