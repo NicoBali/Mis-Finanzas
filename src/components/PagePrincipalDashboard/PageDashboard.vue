@@ -1,7 +1,11 @@
 <template>
-  <div class="dashboard-container">
-    <SlideBarMenu :sidebarOpen="sidebarOpen" @change-section="cambiarSeccion" />
-    <div class="main-content" :class="{ 'sidebar-open': sidebarOpen }">
+  <div class="app-layout">
+    <SlideBarMenu :sidebarOpen="sidebarOpen" />
+    <div class="sidebar-overlay" v-if="sidebarOpen && isMobile" @click="toggleSidebar"></div>
+    <div class="main-content">
+      <button class="menu-toggle" @click="toggleSidebar" v-if="isMobile">
+        <i class="bi bi-list"></i>
+      </button>
       <div class="dashboard-page text-white p-4">
         <h1 class="mb-4">Dashboard</h1>
 
@@ -52,11 +56,23 @@
 </template>
 
 <script>
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { Chart, registerables } from 'chart.js';
 import SlideBarMenu from '@/components/SlideBarMenu.vue';
 
 Chart.register(...registerables);
+
+// Estado para sidebar móvil
+const isMobile = ref(false)
+const sidebarOpen = ref(false)
+
+function toggleSidebar() {
+  sidebarOpen.value = !sidebarOpen.value
+}
+
+function checkMobile() {
+  isMobile.value = window.innerWidth <= 768
+}
 
 export default {
   name: 'PageDashboard',
@@ -64,14 +80,15 @@ export default {
     SlideBarMenu
   },
   setup() {
-    const sidebarOpen = ref(false);
-
     const cambiarSeccion = (seccion) => {
       console.log('Cambiando a sección:', seccion);
       // Aquí puedes agregar lógica para cambiar de sección si es necesario
     };
 
     onMounted(() => {
+      checkMobile()
+      window.addEventListener('resize', checkMobile)
+
       // Gastos
       const ctxGastos = document.getElementById('gastosChart').getContext('2d');
       new Chart(ctxGastos, {
@@ -119,8 +136,14 @@ export default {
       });
     });
 
+    onUnmounted(() => {
+      window.removeEventListener('resize', checkMobile)
+    })
+
     return {
+      isMobile,
       sidebarOpen,
+      toggleSidebar,
       cambiarSeccion
     };
   }
@@ -128,36 +151,23 @@ export default {
 </script>
 
 <style scoped>
-.dashboard-container {
+/* Layout */
+.app-layout {
   display: flex;
   height: 100vh;
 }
 
-.sidebar {
-  width: 250px;
-  background: #111c2e;
-  padding: 2rem 1rem;
-  color: #d9e4ff;
-  box-shadow: 8px 0px 20px rgba(0,0,0,0.3);
-  height: 100vh;
-  position: fixed;
-  left: 0;
-  top: 0;
-}
-
 .main-content {
   flex: 1;
-  margin-left: 0;
-  transition: margin-left 0.3s ease;
+  overflow-y: auto;
+  padding-left: 250px; /* Ancho del sidebar */
 }
 
-.main-content.sidebar-open {
-  margin-left: 250px;
-}
-
+/* Contenedor general */
 .dashboard-page {
   min-height: 100vh;
   background: linear-gradient(145deg, #071526, #0e2238, #0a1a31);
+  padding: 2rem;
 }
 
 .card {
@@ -167,5 +177,81 @@ export default {
 .card-title {
   font-weight: bold;
   margin-bottom: 1rem;
+}
+
+/* Botón menú móvil */
+.menu-toggle {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  background: #111c2e;
+  color: #d9e4ff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.menu-toggle:hover {
+  background: #1c2a44;
+}
+
+/* Overlay para cerrar sidebar */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .main-content {
+    padding-left: 0;
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1001;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .dashboard-page {
+    padding: 1rem;
+  }
+
+  .col-md-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin-bottom: 1rem;
+  }
+
+  .card-title {
+    font-size: 1.2rem;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-page {
+    padding: 1rem;
+  }
 }
 </style>
