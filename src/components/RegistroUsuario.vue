@@ -1,58 +1,64 @@
 <template>
-  <div class="registro-wrapper d-flex justify-content-center align-items-center">
+  <div class="page-wrapper">
+    <HeaderMain />
+    <div class="content-wrapper d-flex justify-content-center align-items-center">
 
-    <div class="welcome-text animate__animated animate__fadeInDown">
-      <h1 class="fw-bold">Únete a la revolución financiera 🚀</h1>
-      <p>Regístrate y empieza a tomar el control de tu dinero como nunca antes.</p>
+      <div class="welcome-text animate__animated animate__fadeInDown">
+        <h1 class="fw-bold">Únete a la revolución financiera 🚀</h1>
+        <p>Regístrate y empieza a tomar el control de tu dinero como nunca antes.</p>
+      </div>
+
+      <div class="registro-card animate__animated animate__fadeInUp">
+
+        <h2 class="text-center fw-bold mb-4 titulo">Crear cuenta</h2>
+
+        <form @submit.prevent="registrarUsuario">
+
+          <div class="mb-3 input-group">
+            <span class="input-group-text"><i class="bi bi-person"></i></span>
+            <input type="text" class="form-control" placeholder="Nombre" v-model="usuario.nombre" required>
+          </div>
+
+          <div class="mb-3 input-group">
+            <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+            <input type="text" class="form-control" placeholder="Apellido" v-model="usuario.apellido" required>
+          </div>
+
+          <div class="mb-3 input-group">
+            <span class="input-group-text"><i class="bi bi-credit-card-2-front"></i></span>
+            <input type="number" class="form-control" placeholder="Cédula" v-model="usuario.cedula" required>
+          </div>
+
+          <div class="mb-3 input-group">
+            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+            <input type="email" class="form-control" placeholder="Correo electrónico" v-model="usuario.correo" required>
+          </div>
+
+          <div class="mb-4 input-group">
+            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+            <input type="password" class="form-control" placeholder="Contraseña" v-model="usuario.contrasena" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 fw-semibold registro-btn">
+            <i class="bi bi-person-plus"></i> Registrarme
+          </button>
+
+        </form>
+
+        <p class="text-center mt-3 text-light small">
+          ¿Ya tienes cuenta? <a href="/login" class="link-light text-decoration-none fw-bold hover-link">Iniciar sesión</a>
+        </p>
+
+      </div>
     </div>
-
-    <div class="registro-card animate__animated animate__fadeInUp">
-
-      <h2 class="text-center fw-bold mb-4 titulo">Crear cuenta</h2>
-
-      <form @submit.prevent="registrarUsuario">
-
-        <div class="mb-3 input-group">
-          <span class="input-group-text"><i class="bi bi-person"></i></span>
-          <input type="text" class="form-control" placeholder="Nombre" v-model="usuario.nombre" required>
-        </div>
-
-        <div class="mb-3 input-group">
-          <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
-          <input type="text" class="form-control" placeholder="Apellido" v-model="usuario.apellido" required>
-        </div>
-
-        <div class="mb-3 input-group">
-          <span class="input-group-text"><i class="bi bi-credit-card-2-front"></i></span>
-          <input type="number" class="form-control" placeholder="Cédula" v-model="usuario.cedula" required>
-        </div>
-
-        <div class="mb-3 input-group">
-          <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-          <input type="email" class="form-control" placeholder="Correo electrónico" v-model="usuario.correo" required>
-        </div>
-
-        <div class="mb-4 input-group">
-          <span class="input-group-text"><i class="bi bi-lock"></i></span>
-          <input type="password" class="form-control" placeholder="Contraseña" v-model="usuario.contrasena" required>
-        </div>
-
-        <button type="submit" class="btn btn-primary w-100 fw-semibold registro-btn">
-          <i class="bi bi-person-plus"></i> Registrarme
-        </button>
-
-      </form>
-
-      <p class="text-center mt-3 text-light small">
-        ¿Ya tienes cuenta? <a href="/login" class="link-light text-decoration-none fw-bold hover-link">Iniciar sesión</a>
-      </p>
-
-    </div>
+    <FooterMain />
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue"
+import HeaderMain from '@/components/PagePrincipal/HeaderMain.vue'
+import FooterMain from '@/components/PagePrincipal/FooterMain.vue'
 
 const usuario = ref({
   nombre: "",
@@ -73,10 +79,42 @@ const registrarUsuario = () => {
 </script>
 
 <style scoped>
+/* Media Queries para móvil */
+@media (max-width: 768px) {
+  .content-wrapper {
+    padding: 1rem;
+  }
+
+  .registro-card {
+    padding: 1.5rem;
+  }
+
+  .titulo {
+    font-size: 1.5rem;
+  }
+
+  .registro-btn {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .welcome-text h1 {
+    font-size: 1.5rem;
+  }
+
+  .welcome-text p {
+    font-size: 0.9rem;
+  }
+}
+
 /* Fondo premium estilo banca digital */
-.registro-wrapper {
+.page-wrapper {
   min-height: 100vh;
   background: linear-gradient(145deg, #071526, #0e2238, #0a1a31);
+}
+
+.content-wrapper {
+  min-height: calc(100vh - 120px); /* Ajuste para header y footer */
   padding: 2rem;
   flex-direction: column;
 }
@@ -174,4 +212,10 @@ const registrarUsuario = () => {
 
 /* Animación entrada (usando animate.css) */
 @import "https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css";
+
+/* Override footer color to match header */
+.footer {
+  background-color: #003366 !important;
+  color: white !important;
+}
 </style>

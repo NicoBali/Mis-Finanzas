@@ -4,34 +4,40 @@
     <div class="content-wrapper d-flex justify-content-center align-items-center">
       <div class="login-card animate__animated animate__fadeInDown">
 
-        <h2 class="text-center fw-bold mb-4 titulo">Iniciar sesión</h2>
+        <h2 class="text-center fw-bold mb-4 titulo">Restablecer contraseña</h2>
 
-        <form @submit.prevent="iniciarSesion">
+        <form @submit.prevent="restablecerContraseña">
 
           <div class="mb-3 input-group">
-            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-            <input type="email" class="form-control" placeholder="Correo electrónico" v-model="credenciales.correo" required>
+            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+            <input
+              type="password"
+              class="form-control"
+              placeholder="Nueva contraseña"
+              v-model="nuevaContrasena"
+              required
+            >
           </div>
 
-          <div class="mb-4 input-group">
-            <span class="input-group-text"><i class="bi bi-lock"></i></span>
-            <input type="password" class="form-control" placeholder="Contraseña" v-model="credenciales.contrasena" required>
+          <div class="mb-3 input-group">
+            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+            <input
+              type="password"
+              class="form-control"
+              placeholder="Confirmar contraseña"
+              v-model="confirmarContrasena"
+              required
+            >
           </div>
 
           <button type="submit" class="btn btn-primary w-100 fw-semibold login-btn">
-            <i class="bi bi-box-arrow-in-right"></i> Ingresar
+            <i class="bi bi-arrow-repeat"></i> Restablecer
           </button>
+
         </form>
 
         <p class="text-center mt-3 text-light small">
-          ¿No tienes cuenta? <router-link to="/registro" class="link-light text-decoration-none fw-bold">Regístrate</router-link>
-        </p>
-
-        <p class="text-center mt-2 text-light small">
-        ¿Olvidaste tu contraseña?
-        <router-link to="/solicitud" class="link-light text-decoration-none fw-bold">
-          Haz clic aquí
-        </router-link>
+          <router-link to="/login" class="link-light text-decoration-none fw-bold">Volver al inicio de sesión</router-link>
         </p>
 
       </div>
@@ -45,19 +51,22 @@ import { ref } from "vue"
 import HeaderMain from '@/components/PagePrincipal/HeaderMain.vue'
 import FooterMain from '@/components/PagePrincipal/FooterMain.vue'
 
-const credenciales = ref({
-  correo: "",
-  contrasena: ""
-})
+const nuevaContrasena = ref("")
+const confirmarContrasena = ref("")
 
-const iniciarSesion = () => {
-  if (!credenciales.value.correo || !credenciales.value.contrasena) {
-    alert("❌ Ingresa tu correo y contraseña.")
+const restablecerContraseña = () => {
+  if (!nuevaContrasena.value || !confirmarContrasena.value) {
+    alert("❌ Completa ambos campos.")
     return
   }
 
-  console.log("🔐 Usuario inició sesión:", credenciales.value)
-  alert(`✅ Bienvenido nuevamente!`)
+  if (nuevaContrasena.value !== confirmarContrasena.value) {
+    alert("❌ Las contraseñas no coinciden.")
+    return
+  }
+
+  console.log("Contraseña restablecida:", nuevaContrasena.value)
+  alert("✅ Contraseña restablecida correctamente (simulado).")
 }
 </script>
 
@@ -82,7 +91,7 @@ const iniciarSesion = () => {
   }
 }
 
-/* Fondo igual al registro */
+/* Fondo igual al login */
 .page-wrapper {
   min-height: 100vh;
   background: linear-gradient(145deg, #071526, #0e2238, #0a1a31);

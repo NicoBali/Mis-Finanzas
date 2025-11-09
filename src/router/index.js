@@ -13,6 +13,9 @@ import RegistrarIngreso from '@/components/RegistrarIngreso.vue'
 import RegistrarGasto from '@/components/RegistrarGasto.vue'
 import MetasAhorro from '@/components/MetaAhorro/MetaAhorro.vue'
 import HistorialFinanciero from '@/components/Historial/HistorialFinanciero.vue'
+import SolicitarEstablecer from '@/components/CambioClave/SolicitarEstablecer.vue'
+import RestablecerClave from '@/components/CambioClave/RestablecerClave.vue'
+import PageDashboard from '@/components/PagePrincipalDashboard/PageDashboard.vue'
 
 
 const routes = [
@@ -67,6 +70,24 @@ const routes = [
     path: '/historial',
     name: 'HistorialFinanciero',
     component: HistorialFinanciero
+  },
+
+  {
+    path: '/solicitud',
+    name: 'Solicitud',
+    component: SolicitarEstablecer
+  },
+
+  {
+    path: '/restablecer',
+    name: 'Restablecer',
+    component: RestablecerClave
+  },
+
+   {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: PageDashboard
   }
 ]
 
