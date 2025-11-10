@@ -40,6 +40,17 @@
           <router-link to="/login" class="link-light text-decoration-none fw-bold">Volver al inicio de sesión</router-link>
         </p>
 
+        <!-- Toast para contraseñas no coincidentes -->
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+          <div ref="toastNoCoinciden" class="toast align-items-center text-bg-warning border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+              <div class="toast-body fw-bold">
+                ⚠️ Las contraseñas no coinciden.
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
     <FooterMain />
@@ -47,28 +58,64 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { ref, onMounted } from "vue"
+import { useRoute, useRouter } from "vue-router"
+import axios from "axios"
 import HeaderMain from '@/components/PagePrincipal/HeaderMain.vue'
 import FooterMain from '@/components/PagePrincipal/FooterMain.vue'
+import { Toast } from 'bootstrap'  // Asegúrate de tener Bootstrap JS importado
+
+const router = useRouter()
+const route = useRoute()
 
 const nuevaContrasena = ref("")
 const confirmarContrasena = ref("")
+const token = ref("")
+const toastNoCoinciden = ref(null)
 
-const restablecerContraseña = () => {
+// Capturamos el token de la URL al montar el componente
+onMounted(() => {
+  token.value = route.query.token
+  if (!token.value) {
+    alert("❌ Token inválido. Debes solicitar un nuevo restablecimiento.")
+    router.push("/solicitud")
+  }
+})
+
+const restablecerContraseña = async () => {
   if (!nuevaContrasena.value || !confirmarContrasena.value) {
     alert("❌ Completa ambos campos.")
     return
   }
 
   if (nuevaContrasena.value !== confirmarContrasena.value) {
-    alert("❌ Las contraseñas no coinciden.")
+    // Mostrar toast de contraseñas no coincidentes
+    const bsToast = new Toast(toastNoCoinciden.value, { autohide: true, delay: 3000 })
+    bsToast.show()
     return
   }
 
-  console.log("Contraseña restablecida:", nuevaContrasena.value)
-  alert("✅ Contraseña restablecida correctamente (simulado).")
+  try {
+    // Petición al backend
+    await axios.post("https://localhost:7037/api/Auth/restablecer", {
+      token: token.value,
+      nuevaContrasena: nuevaContrasena.value
+    })
+
+    alert("✅ Contraseña restablecida correctamente")
+    router.push("/login")
+  } catch (error) {
+    console.error("Error al restablecer contraseña:", error)
+    if (error.response?.data) {
+      alert("⚠️ " + error.response.data)
+    } else {
+      alert("❌ Error al conectar con el servidor.")
+    }
+  }
 }
 </script>
+
+
 
 <style scoped>
 /* Media Queries para móvil */
