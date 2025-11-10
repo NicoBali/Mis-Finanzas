@@ -77,24 +77,54 @@
 
 <script setup>
 import { ref } from "vue";
+import axios from "axios";
 
 const descripcion = ref("");
 const monto = ref("");
 const fecha = ref("");
 
-const handleSubmit = () => {
+// ⚙️ Cambia esto por el ID del usuario autenticado si ya lo manejas
+const usuarioId = 1;
+
+const handleSubmit = async () => {
   const ingreso = {
+    id: 0,
+    usuarioId,
     descripcion: descripcion.value,
     monto: parseFloat(monto.value),
-    fecha: fecha.value,
+    fechaRegistro: fecha.value,
+    usuario: {
+      id: usuarioId,
+      nombre: "Usuario",
+      apellido: "Ejemplo",
+      correo: "user@example.com",
+      cedula: "123456789",
+      contrasena: "1234",
+      fechaRegistro: new Date().toISOString(),
+      ingresos: [],
+      gastos: [],
+      flujosMensual: [],
+      metasAhorro: [],
+      recuperarContraseñas: [],
+    },
   };
-  console.log("Ingreso registrado:", ingreso);
 
-  descripcion.value = "";
-  monto.value = "";
-  fecha.value = "";
+  try {
+    const response = await axios.post("https://localhost:7037/api/Ingresos", ingreso);
+    console.log("✅ Ingreso registrado correctamente:", response.data);
+    alert("Ingreso guardado con éxito 🎉");
+
+    // Limpiar campos
+    descripcion.value = "";
+    monto.value = "";
+    fecha.value = "";
+  } catch (error) {
+    console.error("❌ Error al registrar el ingreso:", error);
+    alert("Error al registrar el ingreso. Revisa la consola para más detalles.");
+  }
 };
 </script>
+
 
 <style scoped>
 .split-container {

@@ -82,6 +82,7 @@
 
 <script setup>
 import { ref } from "vue";
+import axios from "axios";
 
 const categoria = ref("");
 const tipo = ref("variable");
@@ -89,23 +90,34 @@ const monto = ref("");
 const descripcion = ref("");
 const fecha = ref("");
 
-const handleSubmit = () => {
+// ⚙️ Cambia este ID si manejas usuarios logueados
+const usuarioId = 1;
+
+const handleSubmit = async () => {
   const gasto = {
+    usuarioId, // asegúrate de que este tenga un valor (ej: 1)
     categoria: categoria.value,
     tipo: tipo.value,
     monto: parseFloat(monto.value),
     descripcion: descripcion.value,
-    fecha: fecha.value,
+    fechaRegistro: new Date().toISOString(), // o puedes dejar que el backend lo genere
   };
-  console.log("Gasto registrado:", gasto);
 
-  categoria.value = "";
-  tipo.value = "variable";
-  monto.value = "";
-  descripcion.value = "";
-  fecha.value = "";
+  console.log("📦 Enviando gasto:", gasto);
+
+  try {
+    const response = await axios.post("https://localhost:7037/api/Gastos", gasto);
+    console.log("✅ Gasto registrado correctamente:", response.data);
+    alert("💸 Gasto guardado con éxito");
+  } catch (error) {
+    console.error("❌ Error al registrar el gasto:", error.response?.data || error);
+    alert("Error al registrar el gasto. Revisa la consola para más detalles.");
+  }
 };
+
+
 </script>
+
 
 <style scoped>
 .split-container {
