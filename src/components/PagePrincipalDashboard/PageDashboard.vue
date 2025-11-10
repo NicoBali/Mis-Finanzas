@@ -45,9 +45,29 @@
         <div class="card bg-dark shadow-sm mt-4">
           <div class="card-body">
             <h5 class="card-title" style="color: white;">Resumen General</h5>
-            <p style="color: white;">Total Gastos: $1,200</p>
-            <p style="color: white;">Total Ingresos: $3,500</p>
-            <p style="color: white;">Progreso Metas: 60%</p>
+            <p style="color: white;">Total Gastos: ${{ totalGastos().toLocaleString() }}</p>
+            <p style="color: white;">Total Ingresos: ${{ totalIngresos().toLocaleString() }}</p>
+            <p style="color: white;">Progreso Metas: {{ progresoMetas() }}%</p>
+          </div>
+        </div>
+
+        <!-- TOASTS -->
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+          <div
+            v-for="(toast, index) in toasts"
+            :key="index"
+            class="toast align-items-center text-white border-0 show"
+            :class="toast.bg"
+            role="alert"
+          >
+            <div class="d-flex">
+              <div class="toast-body">{{ toast.msg }}</div>
+              <button
+                type="button"
+                class="btn-close btn-close-white me-2 m-auto"
+                @click="removeToast(index)"
+              ></button>
+            </div>
           </div>
         </div>
       </div>
@@ -58,6 +78,7 @@
 <script>
 import { onMounted, onUnmounted, ref } from 'vue';
 import { Chart, registerables } from 'chart.js';
+import axios from 'axios';
 import SlideBarMenu from '@/components/SlideBarMenu.vue';
 
 Chart.register(...registerables);
@@ -74,6 +95,125 @@ function checkMobile() {
   isMobile.value = window.innerWidth <= 768
 }
 
+// Datos reales de la API
+const ingresos = ref([])
+const gastos = ref([])
+const metas = ref([])
+const usuarioId = Number(localStorage.getItem("usuarioId") || 1)
+console.log("Usuario ID actual:", usuarioId)
+
+// Toasts para feedback
+const toasts = ref([])
+const showToast = (msg, bg = "bg-danger") => {
+  toasts.value.push({ msg, bg })
+  setTimeout(() => toasts.value.shift(), 3000)
+}
+const removeToast = (i) => toasts.value.splice(i, 1)
+
+// Cargar ingresos desde API
+const cargarIngresos = async () => {
+  try {
+    const res = await axios.get(`https://localhost:7037/api/Ingresos/${usuarioId}`)
+    ingresos.value = res.data.sort((a, b) => new Date(a.fechaRegistro) - new Date(b.fechaRegistro))
+  } catch (error) {
+    console.error("Error al cargar ingresos:", error)
+    showToast("Error al cargar ingresos", "bg-warning")
+  }
+}
+
+// Cargar gastos desde API
+const cargarGastos = async () => {
+  try {
+    const res = await axios.get(`https://localhost:7037/api/Gastos/${usuarioId}`)
+    gastos.value = res.data.sort((a, b) => new Date(a.fechaRegistro) - new Date(b.fechaRegistro))
+  } catch (error) {
+    console.error("Error al cargar gastos:", error)
+    showToast("Error al cargar gastos", "bg-warning")
+  }
+}
+
+// Cargar metas desde API
+const cargarMetas = async () => {
+  try {
+    const res = await axios.get(`https://localhost:7037/api/Metas/${usuarioId}`)
+    metas.value = res.data
+  } catch (error) {
+    console.error("Error al cargar metas:", error)
+    showToast("Error al cargar metas", "bg-warning")
+  }
+}
+
+// Calcular totales
+const totalGastos = () => gastos.value.reduce((sum, g) => sum + g.monto, 0)
+const totalIngresos = () => ingresos.value.reduce((sum, i) => sum + i.monto, 0)
+const progresoMetas = () => {
+  if (metas.value.length === 0) return 0
+  const viables = metas.value.filter(m => m.estado === "Viable ✅").length
+  return Math.round((viables / metas.value.length) * 100)
+}
+
+// Crear gráficos con datos reales
+const crearGraficos = () => {
+  // Gastos por categoría
+  const categoriasGastos = {}
+  gastos.value.forEach(g => {
+    categoriasGastos[g.categoria] = (categoriasGastos[g.categoria] || 0) + g.monto
+  })
+  const labelsGastos = Object.keys(categoriasGastos)
+  const dataGastos = Object.values(categoriasGastos)
+
+  const ctxGastos = document.getElementById('gastosChart').getContext('2d');
+  new Chart(ctxGastos, {
+    type: 'pie',
+    data: {
+      labels: labelsGastos.length > 0 ? labelsGastos : ['Sin datos'],
+      datasets: [{
+        data: dataGastos.length > 0 ? dataGastos : [1],
+        backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff', '#ff9f40'],
+      }]
+    }
+  });
+
+  // Ingresos individuales (cada ingreso como una línea)
+  const labelsIngresos = ingresos.value.map(i => i.descripcion || `Ingreso ${i.id}`)
+  const dataIngresos = ingresos.value.map(i => i.monto)
+
+  const ctxIngresos = document.getElementById('ingresosChart').getContext('2d');
+  new Chart(ctxIngresos, {
+    type: 'bar',
+    data: {
+      labels: labelsIngresos.length > 0 ? labelsIngresos : ['Sin datos'],
+      datasets: [{
+        label: 'Ingresos',
+        data: dataIngresos.length > 0 ? dataIngresos : [0],
+        backgroundColor: '#36a2eb'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false }
+      }
+    }
+  });
+
+  // Metas viables vs no viables
+  const viables = metas.value.filter(m => m.estado === "Viable ✅").length
+  const noViables = metas.value.length - viables
+
+  const ctxMetas = document.getElementById('metasChart').getContext('2d');
+  new Chart(ctxMetas, {
+    type: 'doughnut',
+    data: {
+      labels: ['Viables', 'No Viables'],
+      datasets: [{
+        data: metas.value.length > 0 ? [viables, noViables] : [1, 0],
+        backgroundColor: ['#4bc0c0', '#ff6384']
+      }]
+    }
+  });
+}
+
 export default {
   name: 'PageDashboard',
   components: {
@@ -85,55 +225,12 @@ export default {
       // Aquí puedes agregar lógica para cambiar de sección si es necesario
     };
 
-    onMounted(() => {
+    onMounted(async () => {
       checkMobile()
       window.addEventListener('resize', checkMobile)
 
-      // Gastos
-      const ctxGastos = document.getElementById('gastosChart').getContext('2d');
-      new Chart(ctxGastos, {
-        type: 'pie',
-        data: {
-          labels: ['Alquiler', 'Comida', 'Transporte', 'Otros'],
-          datasets: [{
-            data: [400, 300, 200, 300],
-            backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0'],
-          }]
-        }
-      });
-
-      // Ingresos
-      const ctxIngresos = document.getElementById('ingresosChart').getContext('2d');
-      new Chart(ctxIngresos, {
-        type: 'bar',
-        data: {
-          labels: ['Enero', 'Febrero', 'Marzo', 'Abril'],
-          datasets: [{
-            label: 'Ingresos Mensuales',
-            data: [800, 1200, 1000, 1500],
-            backgroundColor: '#36a2eb'
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: { display: false }
-          }
-        }
-      });
-
-      // Metas
-      const ctxMetas = document.getElementById('metasChart').getContext('2d');
-      new Chart(ctxMetas, {
-        type: 'doughnut',
-        data: {
-          labels: ['Viables', 'No Viables'],
-          datasets: [{
-            data: [3, 2],
-            backgroundColor: ['#4bc0c0', '#ff6384']
-          }]
-        }
-      });
+      await Promise.all([cargarIngresos(), cargarGastos(), cargarMetas()])
+      crearGraficos()
     });
 
     onUnmounted(() => {
@@ -144,7 +241,12 @@ export default {
       isMobile,
       sidebarOpen,
       toggleSidebar,
-      cambiarSeccion
+      cambiarSeccion,
+      totalGastos,
+      totalIngresos,
+      progresoMetas,
+      toasts,
+      removeToast
     };
   }
 }

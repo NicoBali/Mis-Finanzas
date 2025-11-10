@@ -92,9 +92,10 @@ const iniciarSesion = async () => {
     const response = await axios.post("https://localhost:7037/api/Auth/login", credenciales.value)
 
     localStorage.setItem("usuario", JSON.stringify(response.data.usuario))
+    localStorage.setItem("usuarioId", response.data.usuario.id)
 
     router.push("/dashboard")
-  } 
+  }
   catch (error) {
     if (error.response?.status === 401) {
       const bsToast = new Toast(toastError.value)

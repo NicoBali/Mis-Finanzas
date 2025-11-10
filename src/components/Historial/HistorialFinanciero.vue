@@ -47,7 +47,7 @@
                 <tr v-for="ingreso in ingresosFiltrados" :key="ingreso.id">
                   <td>{{ ingreso.descripcion || 'Sin descripción' }}</td>
                   <td>{{ ingreso.monto.toLocaleString() }}</td>
-                  <td>{{ new Date(ingreso.fecha_registro).toLocaleDateString() }}</td>
+                  <td>{{ new Date(ingreso.fechaRegistro).toLocaleDateString() }}</td>
                 </tr>
                 <tr v-if="ingresosFiltrados.length === 0">
                   <td colspan="3" class="text-center">No hay ingresos en este rango</td>
@@ -79,7 +79,7 @@
                   <td>{{ gasto.categoria }}</td>
                   <td>{{ gasto.tipo }}</td>
                   <td>{{ gasto.monto.toLocaleString() }}</td>
-                  <td>{{ new Date(gasto.fecha_registro).toLocaleDateString() }}</td>
+                  <td>{{ new Date(gasto.fechaRegistro).toLocaleDateString() }}</td>
                 </tr>
                 <tr v-if="gastosFiltrados.length === 0">
                   <td colspan="4" class="text-center">No hay gastos en este rango</td>
@@ -90,6 +90,27 @@
         </div>
       </div>
     </div>
+
+    <!-- TOASTS -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div
+        v-for="(toast, index) in toasts"
+        :key="index"
+        class="toast align-items-center text-white border-0 show"
+        :class="toast.bg"
+        role="alert"
+      >
+        <div class="d-flex">
+          <div class="toast-body">{{ toast.msg }}</div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            @click="removeToast(index)"
+          ></button>
+        </div>
+      </div>
+    </div>
+
       </div>
     </div>
   </div>
@@ -97,20 +118,43 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import axios from 'axios'
 import SlideBarMenu from '../SlideBarMenu.vue'
 
-// Simulamos datos (frontend solo UI)
-const ingresos = ref([
-  { id: 1, descripcion: 'Sueldo', monto: 1200, fecha_registro: '2025-11-01' },
-  { id: 2, descripcion: 'Freelance', monto: 350, fecha_registro: '2025-11-10' },
-  { id: 3, descripcion: 'Intereses', monto: 50, fecha_registro: '2025-10-25' },
-])
+// Datos reales de la API
+const ingresos = ref([])
+const gastos = ref([])
+const usuarioId = Number(localStorage.getItem("usuarioId") || 1)
 
-const gastos = ref([
-  { id: 1, categoria: 'Alquiler', tipo: 'fijo', monto: 500, fecha_registro: '2025-11-01' },
-  { id: 2, categoria: 'Supermercado', tipo: 'variable', monto: 150, fecha_registro: '2025-11-05' },
-  { id: 3, categoria: 'Transporte', tipo: 'variable', monto: 60, fecha_registro: '2025-10-28' },
-])
+// Toasts para feedback
+const toasts = ref([])
+const showToast = (msg, bg = "bg-danger") => {
+  toasts.value.push({ msg, bg })
+  setTimeout(() => toasts.value.shift(), 3000)
+}
+const removeToast = (i) => toasts.value.splice(i, 1)
+
+// Cargar ingresos desde API
+const cargarIngresos = async () => {
+  try {
+    const res = await axios.get(`https://localhost:7037/api/Ingresos/${usuarioId}`)
+    ingresos.value = res.data.sort((a, b) => new Date(a.fechaRegistro) - new Date(b.fechaRegistro))
+  } catch (error) {
+    console.error("Error al cargar ingresos:", error)
+    showToast("Error al cargar ingresos", "bg-warning")
+  }
+}
+
+// Cargar gastos desde API
+const cargarGastos = async () => {
+  try {
+    const res = await axios.get(`https://localhost:7037/api/Gastos/${usuarioId}`)
+    gastos.value = res.data.sort((a, b) => new Date(a.fechaRegistro) - new Date(b.fechaRegistro))
+  } catch (error) {
+    console.error("Error al cargar gastos:", error)
+    showToast("Error al cargar gastos", "bg-warning")
+  }
+}
 
 // Filtro de fechas
 const fechaInicio = ref('')
@@ -119,7 +163,7 @@ const fechaFin = ref('')
 // Filtramos ingresos
 const ingresosFiltrados = computed(() => {
   return ingresos.value.filter(i => {
-    const fecha = new Date(i.fecha_registro)
+    const fecha = new Date(i.fechaRegistro)
     const inicio = fechaInicio.value ? new Date(fechaInicio.value) : null
     const fin = fechaFin.value ? new Date(fechaFin.value) : null
     return (!inicio || fecha >= inicio) && (!fin || fecha <= fin)
@@ -129,7 +173,7 @@ const ingresosFiltrados = computed(() => {
 // Filtramos gastos
 const gastosFiltrados = computed(() => {
   return gastos.value.filter(g => {
-    const fecha = new Date(g.fecha_registro)
+    const fecha = new Date(g.fechaRegistro)
     const inicio = fechaInicio.value ? new Date(fechaInicio.value) : null
     const fin = fechaFin.value ? new Date(fechaFin.value) : null
     return (!inicio || fecha >= inicio) && (!fin || fecha <= fin)
@@ -156,6 +200,8 @@ function checkMobile() {
 onMounted(() => {
   checkMobile()
   window.addEventListener('resize', checkMobile)
+  cargarIngresos()
+  cargarGastos()
 })
 
 onUnmounted(() => {

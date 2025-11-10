@@ -19,14 +19,16 @@ import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
 import Button from 'primevue/button'
 import Card from 'primevue/card'
-
+import ToastService from 'primevue/toastservice'
 // Iconos de PrimeVue
 import 'primeicons/primeicons.css'
+
 
 // Crear la app
 const app = createApp(App)
 
 // Usar router y PrimeVue
+app.use(ToastService)
 app.use(router)
 app.use(PrimeVue, {
   theme: {
