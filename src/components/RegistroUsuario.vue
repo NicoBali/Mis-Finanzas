@@ -9,11 +9,9 @@
       </div>
 
       <div class="registro-card animate__animated animate__fadeInUp">
-
         <h2 class="text-center fw-bold mb-4 titulo">Crear cuenta</h2>
 
         <form @submit.prevent="registrarUsuario">
-
           <div class="mb-3 input-group">
             <span class="input-group-text"><i class="bi bi-person"></i></span>
             <input type="text" class="form-control" placeholder="Nombre" v-model="usuario.nombre" required>
@@ -26,7 +24,7 @@
 
           <div class="mb-3 input-group">
             <span class="input-group-text"><i class="bi bi-credit-card-2-front"></i></span>
-            <input type="number" class="form-control" placeholder="Cédula" v-model="usuario.cedula" required>
+            <input type="text" class="form-control" placeholder="Cédula" v-model="usuario.cedula" required>
           </div>
 
           <div class="mb-3 input-group">
@@ -42,14 +40,24 @@
           <button type="submit" class="btn btn-primary w-100 fw-semibold registro-btn">
             <i class="bi bi-person-plus"></i> Registrarme
           </button>
-
         </form>
 
         <p class="text-center mt-3 text-light small">
-          ¿Ya tienes cuenta? <a href="/login" class="link-light text-decoration-none fw-bold hover-link">Iniciar sesión</a>
+          ¿Ya tienes cuenta? <router-link to="/login" class="link-light text-decoration-none fw-bold hover-link">Iniciar sesión</router-link>
         </p>
-
       </div>
+
+      <!-- Toast de éxito -->
+      <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div ref="toast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+          <div class="d-flex">
+            <div class="toast-body fw-bold">
+              ✅ Cuenta creada correctamente
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
     <FooterMain />
   </div>
@@ -57,8 +65,14 @@
 
 <script setup>
 import { ref } from "vue"
+import axios from "axios"
 import HeaderMain from '@/components/PagePrincipal/HeaderMain.vue'
 import FooterMain from '@/components/PagePrincipal/FooterMain.vue'
+import { useRouter } from "vue-router"
+import { Toast } from 'bootstrap'  // Asegúrate de tener Bootstrap JS importado
+
+const router = useRouter()
+const toast = ref(null)
 
 const usuario = ref({
   nombre: "",
@@ -68,15 +82,40 @@ const usuario = ref({
   contrasena: ""
 })
 
-const registrarUsuario = () => {
-  if (!usuario.value.nombre || !usuario.value.correo || !usuario.value.contrasena) {
-    alert("❌ Completa todos los campos requeridos.")
-    return
+const registrarUsuario = async () => {
+  try {
+    if (!usuario.value.nombre || !usuario.value.correo || !usuario.value.contrasena) {
+      alert("❌ Completa todos los campos requeridos.")
+      return
+    }
+
+    await axios.post("https://localhost:7037/api/Auth/register", usuario.value)
+
+    localStorage.setItem("usuario", JSON.stringify({
+      nombre: usuario.value.nombre,
+      correo: usuario.value.correo
+    }))
+
+    // Mostrar toast de éxito
+    const bsToast = new Toast(toast.value)
+    bsToast.show()
+
+    // Redirigir al login después de 1.5 segundos
+    setTimeout(() => router.push("/login"), 1500)
+
+  } catch (error) {
+    console.error("Error en el registro:", error)
+    if (error.response && error.response.data) {
+      alert("⚠️ " + error.response.data)
+    } else {
+      alert("❌ Error al registrar usuario.")
+    }
   }
-  console.log("✅ Usuario registrado: ", usuario.value)
-  alert(`✅ ¡Bienvenido, ${usuario.value.nombre}!`)
 }
 </script>
+
+
+
 
 <style scoped>
 /* Media Queries para móvil */

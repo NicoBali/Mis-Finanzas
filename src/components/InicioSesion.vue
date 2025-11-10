@@ -7,15 +7,26 @@
         <h2 class="text-center fw-bold mb-4 titulo">Iniciar sesión</h2>
 
         <form @submit.prevent="iniciarSesion">
-
           <div class="mb-3 input-group">
             <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-            <input type="email" class="form-control" placeholder="Correo electrónico" v-model="credenciales.correo" required>
+            <input
+              type="email"
+              class="form-control"
+              placeholder="Correo electrónico"
+              v-model="credenciales.correo"
+              required
+            />
           </div>
 
           <div class="mb-4 input-group">
             <span class="input-group-text"><i class="bi bi-lock"></i></span>
-            <input type="password" class="form-control" placeholder="Contraseña" v-model="credenciales.contrasena" required>
+            <input
+              type="password"
+              class="form-control"
+              placeholder="Contraseña"
+              v-model="credenciales.contrasena"
+              required
+            />
           </div>
 
           <button type="submit" class="btn btn-primary w-100 fw-semibold login-btn">
@@ -24,15 +35,29 @@
         </form>
 
         <p class="text-center mt-3 text-light small">
-          ¿No tienes cuenta? <router-link to="/registro" class="link-light text-decoration-none fw-bold">Regístrate</router-link>
+          ¿No tienes cuenta?
+          <router-link to="/registro" class="link-light text-decoration-none fw-bold">
+            Regístrate
+          </router-link>
         </p>
 
         <p class="text-center mt-2 text-light small">
-        ¿Olvidaste tu contraseña?
-        <router-link to="/solicitud" class="link-light text-decoration-none fw-bold">
-          Haz clic aquí
-        </router-link>
+          ¿Olvidaste tu contraseña?
+          <router-link to="/solicitud" class="link-light text-decoration-none fw-bold">
+            Haz clic aquí
+          </router-link>
         </p>
+
+        <!-- Toast de error -->
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+          <div ref="toastError" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+              <div class="toast-body fw-bold">
+                ❌ Correo o contraseña incorrectos
+              </div>
+            </div>
+          </div>
+        </div>
 
       </div>
     </div>
@@ -42,24 +67,46 @@
 
 <script setup>
 import { ref } from "vue"
+import axios from "axios"
+import { useRouter } from "vue-router"
 import HeaderMain from '@/components/PagePrincipal/HeaderMain.vue'
 import FooterMain from '@/components/PagePrincipal/FooterMain.vue'
+import { Toast } from 'bootstrap'  // Asegúrate de tener Bootstrap JS importado
+
+const router = useRouter()
+const toastError = ref(null)
 
 const credenciales = ref({
   correo: "",
   contrasena: ""
 })
 
-const iniciarSesion = () => {
+const iniciarSesion = async () => {
   if (!credenciales.value.correo || !credenciales.value.contrasena) {
-    alert("❌ Ingresa tu correo y contraseña.")
+    const bsToast = new Toast(toastError.value)
+    bsToast.show()
     return
   }
 
-  console.log("🔐 Usuario inició sesión:", credenciales.value)
-  alert(`✅ Bienvenido nuevamente!`)
+  try {
+    const response = await axios.post("https://localhost:7037/api/Auth/login", credenciales.value)
+
+    localStorage.setItem("usuario", JSON.stringify(response.data.usuario))
+
+    router.push("/dashboard")
+  } 
+  catch (error) {
+    if (error.response?.status === 401) {
+      const bsToast = new Toast(toastError.value)
+      bsToast.show()
+    } else {
+      console.error("Error al iniciar sesión:", error)
+      alert("❌ Error al conectar con el servidor.")
+    }
+  }
 }
 </script>
+
 
 <style scoped>
 /* Media Queries para móvil */

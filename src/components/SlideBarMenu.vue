@@ -19,7 +19,7 @@
         <li @click="cambiar('RegistrarGasto')">
           <i class="bi bi-journal-bookmark"></i> Registrar gasto
         </li>
-        <li @click="cambiar('RegistrarMeta')">
+        <li @click="cambiar('MetasAhorro')">
           <i class="bi bi-bullseye"></i> Meta de ahorro
         </li>
         <li @click="cambiar('HistorialFinanciero')">
@@ -32,7 +32,7 @@
           <i class="bi bi-gear"></i> Configuración
         </li>
 
-        <li class="logout">
+        <li class="logout" @click="cerrarSesion">
           <i class="bi bi-box-arrow-right"></i> Cerrar sesión
         </li>
       </ul>
@@ -48,18 +48,42 @@
 </template>
 
 <script setup>
-import { ref, defineEmits } from "vue";
+import { ref } from "vue";
+import { useRouter } from 'vue-router'
 
-const emit = defineEmits(["change-section"]);
+const router = useRouter()
 const sidebarOpen = ref(false);
 
 const cambiar = (seccion) => {
-  emit("change-section", seccion);
+  if (seccion === 'DashboardMain') {
+    router.push('/dashboard')
+  } else if (seccion === 'RegistrarIngreso') {
+    router.push('/ingreso')
+  } else if (seccion === 'RegistrarGasto') {
+    router.push('/gasto')
+  } else if (seccion === 'MetasAhorro') {
+    router.push('/metas')
+  } else if (seccion === 'HistorialFinanciero') {
+    router.push('/historial')
+  } else if (seccion === 'ConfiguracionMenu') {
+    router.push('/configuracion')
+  }
   sidebarOpen.value = false; // 🔹 Cierra el menú en móvil al hacer clic
 };
 
 const toggleSidebar = () => {
   sidebarOpen.value = !sidebarOpen.value;
+};
+
+const cerrarSesion = () => {
+  // Limpiar LocalStorage
+  localStorage.clear();
+
+  // Redirigir al login
+  router.push('/login');
+
+  // Cerrar sidebar si está abierto
+  sidebarOpen.value = false;
 };
 </script>
 
